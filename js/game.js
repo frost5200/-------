@@ -1237,9 +1237,126 @@ class GameManager {
     }
     
     static detectMobile() {
-        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
-               window.innerWidth <= 768;
+    // Принудительный режим (для тестирования)
+    const FORCE_MOBILE_MODE = true; // Можно вынести в конфиг
+    
+    if (FORCE_MOBILE_MODE) {
+        console.log('📱 Принудительный мобильный режим активирован');
+        return true;
     }
+    
+    // Комплексная проверка мобильного устройства
+    const checks = {
+        // 1. Проверка User Agent
+        userAgent: function() {
+            const agents = [
+                /Android/i,
+                /webOS/i,
+                /iPhone/i,
+                /iPad/i,
+                /iPod/i,
+                /BlackBerry/i,
+                /Windows Phone/i,
+                /Mobile/i,
+                /Tablet/i,
+                /Samsung/i,
+                /Huawei/i,
+                /Xiaomi/i,
+                /OPPO/i,
+                /Vivo/i,
+                /Realme/i,
+                /OnePlus/i,
+                /Nokia/i,
+                /Sony/i,
+                /LG/i,
+                /Motorola/i,
+                /ZTE/i,
+                /Alcatel/i,
+                /Googlebot/i
+            ];
+            return agents.some(agent => navigator.userAgent.match(agent));
+        },
+        
+        // 2. Проверка сенсорного экрана
+        touchSupport: function() {
+            return 'ontouchstart' in window || 
+                   navigator.maxTouchPoints > 0 || 
+                   navigator.msMaxTouchPoints > 0;
+        },
+        
+        // 3. Проверка размера экрана и соотношения
+        screenSize: function() {
+            const width = window.screen.width;
+            const height = window.screen.height;
+            const ratio = window.devicePixelRatio || 1;
+            
+            // Типичные размеры мобильных устройств
+            const mobileWidth = width < 768 || height < 768;
+            const mobileRatio = ratio > 1; // Высокий DPI на мобильных
+            
+            return mobileWidth || mobileRatio;
+        },
+        
+        // 4. Проверка ориентации
+        orientation: function() {
+            return 'orientation' in window || 
+                   window.screen.orientation || 
+                   window.screen.mozOrientation || 
+                   window.screen.msOrientation;
+        },
+        
+        // 5. Проверка платформы
+        platform: function() {
+            const platforms = [
+                'Android', 'iPhone', 'iPad', 'iPod', 'BlackBerry', 
+                'Windows Phone', 'webOS', 'Mobile', 'Tablet'
+            ];
+            return platforms.some(platform => 
+                navigator.platform.includes(platform) || 
+                navigator.userAgent.includes(platform)
+            );
+        },
+        
+        // 6. Проверка медиа-запросов
+        mediaQuery: function() {
+            return window.matchMedia('(max-width: 768px)').matches ||
+                   window.matchMedia('(pointer: coarse)').matches ||
+                   window.matchMedia('(hover: none)').matches;
+        }
+    };
+    
+    // Подсчет результатов проверок
+    let mobileScore = 0;
+    const totalChecks = Object.keys(checks).length;
+    
+    for (const check in checks) {
+        if (checks[check]()) {
+            mobileScore++;
+        }
+    }
+    
+    // Определение результата
+    const isMobile = mobileScore >= 2; // Если 2+ проверки прошли - считаем мобильным
+    
+    // Детальная отладочная информация
+    console.log('📱 Детектор мобильных устройств:', {
+        userAgent: navigator.userAgent,
+        userAgentCheck: checks.userAgent(),
+        touchSupport: checks.touchSupport(),
+        screenSize: checks.screenSize(),
+        screen: { width: window.screen.width, height: window.screen.height },
+        viewport: { width: window.innerWidth, height: window.innerHeight },
+        pixelRatio: window.devicePixelRatio,
+        orientation: checks.orientation(),
+        platform: checks.platform(),
+        platformInfo: navigator.platform,
+        mediaQuery: checks.mediaQuery(),
+        mobileScore: mobileScore + '/' + totalChecks,
+        finalResult: isMobile
+    });
+    
+    return isMobile;
+}
     
     static setupTouchControls() {
         // Кнопки движения
