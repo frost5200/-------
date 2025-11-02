@@ -635,7 +635,7 @@ class Bonus {
         this.width = 20;
         this.height = 20;
         this.type = Math.floor(Math.random() * 3);
-        this.life = 300;
+        this.life = 600;
     }
     
     update() {
