@@ -21,11 +21,13 @@ const continueButton = document.getElementById('continueButton');
 
 // Мобильные элементы управления
 const mobileControls = document.getElementById('mobileControls');
-const moveArea = document.getElementById('moveArea');
-const shootArea = document.getElementById('shootArea');
-const shootButton = document.querySelector('.shoot-button');
+const mobileShoot = document.getElementById('mobileShoot');
 const mobilePause = document.getElementById('mobilePause');
 const mobileMenu = document.getElementById('mobileMenu');
+const orientationScreen = document.getElementById('orientationScreen');
+
+// Кнопки движения
+const movementButtons = document.querySelectorAll('.movement-btn');
 
 // Экраны
 const mainMenu = document.getElementById('mainMenu');
@@ -159,10 +161,7 @@ let currentDifficulty = 'normal';
 
 // Мобильное управление
 let isMobile = false;
-let touchStartX = 0;
-let touchStartY = 0;
-let isMoving = false;
-let moveDirection = null;
+let activeDirections = new Set();
 let isShooting = false;
 let autoShootInterval = null;
 
@@ -517,30 +516,84 @@ function detectMobile() {
            window.innerWidth <= 768;
 }
 
+// Проверка ориентации
+function isLandscape() {
+    return window.innerWidth > window.innerHeight;
+}
+
+// Управление экраном ориентации
+function updateOrientationScreen() {
+    if (!isMobile) return;
+    
+    if (isLandscape()) {
+        orientationScreen.classList.add('hidden');
+    } else {
+        if (gameScreen.classList.contains('hidden')) {
+            orientationScreen.classList.add('hidden');
+        } else {
+            orientationScreen.classList.remove('hidden');
+        }
+    }
+}
+
 // Инициализация мобильного управления
 function initMobileControls() {
     isMobile = detectMobile();
     
     if (isMobile) {
-        console.log('Мобильное устройство обнаружено, активируем сенсорное управление');
-        setupTouchControls();
+        console.log('Мобильное устройство обнаружено, активируем кнопочное управление');
+        setupButtonControls();
         mobileControls.classList.remove('hidden');
+        
+        // Настройка ориентации
+        updateOrientationScreen();
+        window.addEventListener('resize', updateOrientationScreen);
+        window.addEventListener('orientationchange', updateOrientationScreen);
     } else {
         console.log('Десктопное устройство, используем клавиатурное управление');
         mobileControls.classList.add('hidden');
     }
 }
 
-// Настройка сенсорного управления
-function setupTouchControls() {
-    // Управление движением
-    moveArea.addEventListener('touchstart', handleMoveStart, { passive: false });
-    moveArea.addEventListener('touchmove', handleMove, { passive: false });
-    moveArea.addEventListener('touchend', handleMoveEnd, { passive: false });
+// Настройка кнопочного управления
+function setupButtonControls() {
+    // Обработчики для кнопок движения
+    movementButtons.forEach(button => {
+        button.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            const direction = button.dataset.direction;
+            activeDirections.add(direction);
+        });
+        
+        button.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            const direction = button.dataset.direction;
+            activeDirections.delete(direction);
+        });
+        
+        // Для поддержки мыши на десктопе (для тестирования)
+        button.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            const direction = button.dataset.direction;
+            activeDirections.add(direction);
+        });
+        
+        button.addEventListener('mouseup', (e) => {
+            e.preventDefault();
+            const direction = button.dataset.direction;
+            activeDirections.delete(direction);
+        });
+        
+        button.addEventListener('mouseleave', (e) => {
+            e.preventDefault();
+            const direction = button.dataset.direction;
+            activeDirections.delete(direction);
+        });
+    });
     
-    // Управление стрельбой
-    shootButton.addEventListener('touchstart', handleShootStart, { passive: false });
-    shootButton.addEventListener('touchend', handleShootEnd, { passive: false });
+    // Обработчики для кнопки стрельбы
+    mobileShoot.addEventListener('touchstart', handleShootStart, { passive: false });
+    mobileShoot.addEventListener('touchend', handleShootEnd, { passive: false });
     
     // Кнопки паузы и меню
     mobilePause.addEventListener('click', togglePause);
@@ -548,44 +601,10 @@ function setupTouchControls() {
     
     // Предотвращение стандартного поведения
     document.addEventListener('touchmove', function(e) {
-        if (e.target === moveArea || e.target === shootButton) {
+        if (e.target.classList.contains('movement-btn') || e.target === mobileShoot) {
             e.preventDefault();
         }
     }, { passive: false });
-}
-
-function handleMoveStart(e) {
-    e.preventDefault();
-    const touch = e.touches[0];
-    touchStartX = touch.clientX;
-    touchStartY = touch.clientY;
-    isMoving = true;
-}
-
-function handleMove(e) {
-    if (!isMoving) return;
-    e.preventDefault();
-    
-    const touch = e.touches[0];
-    const deltaX = touch.clientX - touchStartX;
-    const deltaY = touch.clientY - touchStartY;
-    
-    // Определяем направление на основе наибольшего смещения
-    if (Math.abs(deltaX) > Math.abs(deltaY)) {
-        moveDirection = deltaX > 0 ? 'right' : 'left';
-    } else {
-        moveDirection = deltaY > 0 ? 'down' : 'up';
-    }
-    
-    // Обновляем начальную позицию для плавного управления
-    touchStartX = touch.clientX;
-    touchStartY = touch.clientY;
-}
-
-function handleMoveEnd(e) {
-    e.preventDefault();
-    isMoving = false;
-    moveDirection = null;
 }
 
 function handleShootStart(e) {
@@ -662,26 +681,29 @@ class Tank {
         const oldY = this.y;
         
         if (this.isPlayer) {
-            // Мобильное управление
-            if (isMobile && isMoving && moveDirection) {
-                switch(moveDirection) {
-                    case 'up':
-                        this.y -= this.speed;
-                        this.direction = 0;
-                        break;
-                    case 'down':
-                        this.y += this.speed;
-                        this.direction = 2;
-                        break;
-                    case 'left':
-                        this.x -= this.speed;
-                        this.direction = 3;
-                        break;
-                    case 'right':
-                        this.x += this.speed;
-                        this.direction = 1;
-                        break;
-                }
+            // Мобильное управление кнопками
+            if (isMobile && activeDirections.size > 0) {
+                // Обрабатываем все активные направления
+                activeDirections.forEach(direction => {
+                    switch(direction) {
+                        case 'up':
+                            this.y -= this.speed;
+                            this.direction = 0;
+                            break;
+                        case 'down':
+                            this.y += this.speed;
+                            this.direction = 2;
+                            break;
+                        case 'left':
+                            this.x -= this.speed;
+                            this.direction = 3;
+                            break;
+                        case 'right':
+                            this.x += this.speed;
+                            this.direction = 1;
+                            break;
+                    }
+                });
                 
                 // На мобильных устройствах прицеливание совпадает с направлением движения
                 this.aimDirection = this.direction;
@@ -1223,6 +1245,9 @@ function showScreen(screen) {
     document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
     screen.classList.remove('hidden');
     
+    // Обновляем экран ориентации
+    updateOrientationScreen();
+    
     // Адаптация размера canvas для мобильных устройств
     if (screen === gameScreen && isMobile) {
         resizeCanvasForMobile();
@@ -1234,16 +1259,18 @@ function resizeCanvasForMobile() {
     const gameContainer = document.querySelector('.game-container');
     const containerRect = gameContainer.getBoundingClientRect();
     
-    // Сохраняем соотношение сторон 4:3
+    // Для горизонтального режима используем всю доступную высоту
     const maxWidth = containerRect.width;
     const maxHeight = containerRect.height;
     
     let newWidth = maxWidth;
-    let newHeight = maxWidth * 0.75; // 4:3 соотношение
+    let newHeight = maxHeight;
     
-    if (newHeight > maxHeight) {
-        newHeight = maxHeight;
-        newWidth = maxHeight * 1.333; // 4:3 соотношение
+    // Сохраняем соотношение сторон 4:3, но приоритет отдаем высоте
+    if (newHeight * 1.333 > newWidth) {
+        newHeight = newWidth * 0.75;
+    } else {
+        newWidth = newHeight * 1.333;
     }
     
     canvas.width = newWidth;
@@ -1539,8 +1566,7 @@ function startGame() {
     levelCompleteScreen.classList.add('hidden');
     
     // Сброс мобильного управления
-    isMoving = false;
-    moveDirection = null;
+    activeDirections.clear();
     isShooting = false;
     
     updateUI();
@@ -1834,6 +1860,7 @@ function handleResize() {
     setTimeout(() => {
         if (isMobile) {
             resizeCanvasForMobile();
+            updateOrientationScreen();
         }
     }, 100);
 }

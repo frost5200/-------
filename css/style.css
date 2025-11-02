@@ -39,6 +39,48 @@ body {
     display: none !important;
 }
 
+/* Сообщение об ориентации */
+#orientationScreen {
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 1000;
+}
+
+.orientation-message {
+    text-align: center;
+    background: rgba(0, 255, 0, 0.1);
+    padding: 30px;
+    border: 3px solid #0f0;
+    border-radius: 15px;
+    max-width: 90%;
+}
+
+.orientation-icon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+}
+
+.orientation-message h2 {
+    color: #0f0;
+    margin-bottom: 15px;
+    font-size: 1.8rem;
+}
+
+.orientation-message p {
+    color: #0f0;
+    margin-bottom: 20px;
+    opacity: 0.8;
+}
+
+.orientation-arrow {
+    font-size: 3rem;
+    animation: rotate 2s infinite;
+}
+
+@keyframes rotate {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(90deg); }
+}
+
 /* Оптимизированные стили главного меню для мобильных */
 .menu-container {
     text-align: center;
@@ -142,12 +184,21 @@ body {
 
 .menu-footer {
     margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 .version {
     color: #0f0;
     font-size: 0.9rem;
     opacity: 0.7;
+}
+
+.orientation-hint {
+    color: #0f0;
+    font-size: 0.8rem;
+    opacity: 0.6;
 }
 
 /* Адаптивные стили экрана выбора сложности */
@@ -568,7 +619,7 @@ canvas {
     display: none;
 }
 
-/* Мобильные элементы управления */
+/* НОВЫЕ СТИЛИ ДЛЯ КНОПОЧНОГО УПРАВЛЕНИЯ */
 .mobile-controls {
     position: absolute;
     top: 0;
@@ -577,79 +628,126 @@ canvas {
     height: 100%;
     pointer-events: none;
     z-index: 5;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding: 15px;
 }
 
-.touch-area {
-    position: absolute;
-    top: 0;
-    height: 100%;
-    width: 50%;
+.movement-buttons {
     pointer-events: auto;
 }
 
-.left-touch-area {
-    left: 0;
-    /* background: rgba(0, 255, 0, 0.1); */ /* Для отладки */
+.d-pad {
+    display: grid;
+    grid-template-areas: 
+        ". up ."
+        "left center right"
+        ". down .";
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    gap: 5px;
+    width: 120px;
+    height: 120px;
 }
 
-.right-touch-area {
-    right: 0;
+.movement-btn {
+    width: 40px;
+    height: 40px;
+    background: rgba(0, 255, 0, 0.7);
+    border: 2px solid #0f0;
+    border-radius: 8px;
+    color: #000;
+    font-size: 1.2rem;
+    font-weight: bold;
     display: flex;
-    align-items: flex-end;
-    justify-content: flex-end;
-    padding: 20px;
-    /* background: rgba(255, 0, 0, 0.1); */ /* Для отладки */
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.1s ease;
+    touch-action: manipulation;
+    user-select: none;
+    box-shadow: 0 2px 8px rgba(0, 255, 0, 0.3);
 }
 
-.shoot-button {
+.movement-btn:active {
+    background: rgba(0, 255, 0, 1);
+    transform: scale(0.95);
+    box-shadow: 0 1px 4px rgba(0, 255, 0, 0.5);
+}
+
+.up-btn {
+    grid-area: up;
+}
+
+.left-btn {
+    grid-area: left;
+}
+
+.down-btn {
+    grid-area: down;
+}
+
+.right-btn {
+    grid-area: right;
+}
+
+.action-buttons {
+    pointer-events: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 15px;
+}
+
+.shoot-btn {
     width: 80px;
     height: 80px;
     background: linear-gradient(145deg, #ff4444, #ff0000);
     border: 3px solid #fff;
     border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     color: white;
     font-weight: bold;
     font-size: 0.9rem;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
     box-shadow: 0 4px 15px rgba(255, 0, 0, 0.5);
-    pointer-events: auto;
+    cursor: pointer;
+    transition: all 0.1s ease;
     touch-action: manipulation;
     user-select: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.shoot-button:active {
+.shoot-btn:active {
     transform: scale(0.9);
     box-shadow: 0 2px 8px rgba(255, 0, 0, 0.5);
+    background: linear-gradient(145deg, #ff0000, #cc0000);
 }
 
-.mobile-buttons {
-    position: absolute;
-    top: 10px;
-    right: 10px;
+.utility-buttons {
     display: flex;
-    gap: 8px;
-    pointer-events: auto;
+    gap: 10px;
 }
 
-.mobile-button {
-    width: 44px;
-    height: 44px;
+.utility-btn {
+    width: 50px;
+    height: 50px;
+    background: rgba(0, 0, 0, 0.7);
     border: 2px solid #0f0;
     border-radius: 8px;
-    background: rgba(0, 0, 0, 0.7);
     color: #0f0;
     font-size: 1.2rem;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    transition: all 0.1s ease;
     touch-action: manipulation;
 }
 
-.mobile-button:active {
+.utility-btn:active {
     background: rgba(0, 255, 0, 0.2);
     transform: scale(0.95);
 }
@@ -819,15 +917,27 @@ canvas {
         padding: 8px;
     }
     
-    .shoot-button {
+    /* Адаптация кнопок для мобильных */
+    .d-pad {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .movement-btn {
+        width: 35px;
+        height: 35px;
+        font-size: 1rem;
+    }
+    
+    .shoot-btn {
         width: 70px;
         height: 70px;
         font-size: 0.8rem;
     }
     
-    .mobile-button {
-        width: 40px;
-        height: 40px;
+    .utility-btn {
+        width: 45px;
+        height: 45px;
         font-size: 1.1rem;
     }
     
@@ -877,26 +987,32 @@ canvas {
         font-size: 0.75rem;
     }
     
-    .shoot-button {
-        width: 60px;
-        height: 60px;
+    /* Адаптация кнопок для маленьких экранов */
+    .d-pad {
+        width: 90px;
+        height: 90px;
+    }
+    
+    .movement-btn {
+        width: 30px;
+        height: 30px;
+        font-size: 0.9rem;
+    }
+    
+    .shoot-btn {
+        width: 65px;
+        height: 65px;
         font-size: 0.75rem;
     }
     
-    .mobile-button {
-        width: 36px;
-        height: 36px;
+    .utility-btn {
+        width: 40px;
+        height: 40px;
         font-size: 1rem;
     }
     
-    .right-touch-area {
-        padding: 15px;
-    }
-    
-    .mobile-buttons {
-        top: 8px;
-        right: 8px;
-        gap: 6px;
+    .mobile-controls {
+        padding: 10px;
     }
     
     .settings-scroll-container {
@@ -942,24 +1058,24 @@ canvas {
         font-size: 0.7rem;
     }
     
-    .shoot-button {
-        width: 55px;
-        height: 55px;
-    }
-}
-
-/* Портретная ориентация */
-@media (max-height: 600px) and (orientation: portrait) {
-    .game-container {
-        height: 50vh;
+    .d-pad {
+        width: 80px;
+        height: 80px;
     }
     
-    .menu-container {
-        max-height: 90vh;
+    .movement-btn {
+        width: 25px;
+        height: 25px;
+        font-size: 0.8rem;
+    }
+    
+    .shoot-btn {
+        width: 60px;
+        height: 60px;
     }
 }
 
-/* Ландшафтная ориентация */
+/* ГОРИЗОНТАЛЬНАЯ ОРИЕНТАЦИЯ - ОСНОВНОЙ РЕЖИМ ДЛЯ МОБИЛЬНЫХ */
 @media (max-height: 500px) and (orientation: landscape) {
     .screen {
         padding: 5px;
@@ -968,6 +1084,7 @@ canvas {
     .menu-container {
         max-height: 95vh;
         padding: 15px;
+        max-width: 90%;
     }
     
     .menu-buttons {
@@ -988,6 +1105,43 @@ canvas {
     .info-panel {
         grid-template-columns: repeat(6, 1fr);
     }
+    
+    /* Улучшенное расположение кнопок в ландшафтном режиме */
+    .mobile-controls {
+        padding: 10px;
+    }
+    
+    .d-pad {
+        width: 90px;
+        height: 90px;
+    }
+    
+    .movement-btn {
+        width: 30px;
+        height: 30px;
+    }
+    
+    .shoot-btn {
+        width: 65px;
+        height: 65px;
+    }
+}
+
+/* Принудительная горизонтальная ориентация для мобильных */
+@media (max-width: 768px) and (orientation: portrait) {
+    #orientationScreen {
+        display: flex !important;
+    }
+    
+    #gameScreen:not(.hidden) ~ #orientationScreen {
+        display: flex !important;
+    }
+}
+
+@media (max-width: 768px) and (orientation: landscape) {
+    #orientationScreen {
+        display: none !important;
+    }
 }
 
 /* Поддержка устройств с вырезом (notch) */
@@ -998,11 +1152,17 @@ canvas {
         padding-top: max(10px, env(safe-area-inset-top));
         padding-bottom: max(10px, env(safe-area-inset-bottom));
     }
+    
+    .mobile-controls {
+        padding-left: max(15px, env(safe-area-inset-left));
+        padding-right: max(15px, env(safe-area-inset-right));
+        padding-bottom: max(15px, env(safe-area-inset-bottom));
+    }
 }
 
 /* Улучшения для iOS */
 @supports (-webkit-touch-callout: none) {
-    .menu-button, .game-button, .toggle-button, .preset-button {
+    .menu-button, .game-button, .toggle-button, .preset-button, .movement-btn, .shoot-btn, .utility-btn {
         -webkit-touch-callout: none;
     }
     
@@ -1013,14 +1173,16 @@ canvas {
 
 /* Улучшения для Android */
 @supports not (-webkit-touch-callout: none) {
-    .menu-button:active, .game-button:active, .toggle-button:active, .preset-button:active {
+    .menu-button:active, .game-button:active, .toggle-button:active, .preset-button:active, 
+    .movement-btn:active, .shoot-btn:active, .utility-btn:active {
         transition: none;
     }
 }
 
 /* Отключение анимаций для пользователей, предпочитающих reduced motion */
 @media (prefers-reduced-motion: reduce) {
-    .menu-button, .game-button, .difficulty-button, .toggle-button, .preset-button, .mobile-button, .shoot-button {
+    .menu-button, .game-button, .difficulty-button, .toggle-button, .preset-button, 
+    .movement-btn, .shoot-btn, .utility-btn {
         transition: none;
     }
     
@@ -1036,5 +1198,9 @@ canvas {
         animation: none;
         opacity: 1;
         transform: none;
+    }
+    
+    .orientation-arrow {
+        animation: none;
     }
 }
