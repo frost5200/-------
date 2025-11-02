@@ -1,6 +1,6 @@
 # 🎮 Танчики - Ретро Игра v2.3
 
-![Версия](https://img.shields.io/badge/Версия-2.2.0-green)
+![Версия](https://img.shields.io/badge/Версия-2.3.0-green)
 ![HTML5](https://img.shields.io/badge/HTML5-игра-orange)
 ![JavaScript](https://img.shields.io/badge/JavaScript-100%25-yellow)
 ![Лицензия](https://img.shields.io/badge/Лицензия-MIT-blue)
