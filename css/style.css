@@ -1,0 +1,203 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #000;
+    color: #0f0;
+    font-family: 'Courier New', monospace;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    overflow: hidden;
+    padding: 20px;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 1000px;
+    width: 100%;
+}
+
+h1 {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 20px;
+    text-shadow: 0 0 10px #0f0;
+    color: #0f0;
+}
+
+.game-container {
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+    height: 600px;
+    margin: 20px auto;
+    border: 4px solid #0f0;
+    box-shadow: 0 0 20px #0f0;
+    overflow: hidden;
+}
+
+canvas {
+    background-color: #000;
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.info-panel {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 800px;
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #111;
+    border: 2px solid #0f0;
+    flex-wrap: wrap;
+}
+
+.info-item {
+    font-size: 1.1rem;
+    margin: 5px;
+}
+
+.controls {
+    width: 100%;
+    max-width: 800px;
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #111;
+    border: 2px solid #0f0;
+    text-align: center;
+}
+
+.game-over, .pause-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+}
+
+.game-over h1, .pause-screen h1 {
+    font-size: 3rem;
+    color: #f00;
+    margin-bottom: 20px;
+    text-shadow: 0 0 10px #f00;
+}
+
+.pause-screen h1 {
+    color: #ff0;
+    text-shadow: 0 0 10px #ff0;
+}
+
+.game-over p, .pause-screen p {
+    font-size: 1.5rem;
+    margin-bottom: 30px;
+}
+
+button {
+    background-color: #000;
+    color: #0f0;
+    border: 2px solid #0f0;
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    font-family: 'Courier New', monospace;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+button:hover {
+    background-color: #0f0;
+    color: #000;
+    box-shadow: 0 0 15px #0f0;
+}
+
+.hidden {
+    display: none;
+}
+
+.bonus-notification {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2rem;
+    color: #ff0;
+    text-shadow: 0 0 10px #ff0;
+    z-index: 5;
+    animation: fadeOut 2s forwards;
+}
+
+@keyframes fadeOut {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 1.8rem;
+    }
+    
+    .game-container {
+        height: 400px;
+    }
+    
+    .info-panel {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .info-item {
+        font-size: 1rem;
+    }
+    
+    .controls p {
+        font-size: 0.9rem;
+    }
+    
+    .game-over h1, .pause-screen h1 {
+        font-size: 2rem;
+    }
+    
+    .game-over p, .pause-screen p {
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 1.5rem;
+    }
+    
+    .game-container {
+        height: 300px;
+    }
+    
+    .info-item {
+        font-size: 0.9rem;
+    }
+    
+    .controls p {
+        font-size: 0.8rem;
+    }
+    
+    button {
+        font-size: 1rem;
+        padding: 8px 16px;
+    }
+}
