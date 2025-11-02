@@ -580,44 +580,55 @@ class Tank extends GameObject {
         ctx.rotate(-this.aimDirection * Math.PI/2);
     }
     
-    shoot() {
-        if (this.cooldown === 0) {
-            this.cooldown = 30;
-            this.cannonOffset = GameConfig.GAME.CANNON_RECOIL;
-            
-            soundSystem.play('shoot');
-            
-            const bullet = this.createBullet();
-            return bullet;
+   shoot() {
+    if (this.cooldown === 0) {
+        this.cooldown = 30;
+        this.cannonOffset = GameConfig.GAME.CANNON_RECOIL;
+        
+        // ИСПРАВЛЕНИЕ: Убедимся, что звуковая система работает
+        if (soundSystem && typeof soundSystem.play === 'function') {
+            try {
+                soundSystem.play('shoot');
+            } catch (e) {
+                console.log('Sound error:', e);
+            }
         }
-        return null;
+        
+        const bullet = this.createBullet();
+        console.log('Shooting bullet:', bullet); // Для отладки
+        return bullet;
     }
+    console.log('Cooldown active:', this.cooldown); // Для отладки
+    return null;
+}
     
     createBullet() {
-        const shootDir = this.aimDirection;
-        let bulletX, bulletY;
-        
-        switch(shootDir) {
-            case 0:
-                bulletX = this.x + this.width/2;
-                bulletY = this.y;
-                break;
-            case 1:
-                bulletX = this.x + this.width;
-                bulletY = this.y + this.height/2;
-                break;
-            case 2:
-                bulletX = this.x + this.width/2;
-                bulletY = this.y + this.height;
-                break;
-            case 3:
-                bulletX = this.x;
-                bulletY = this.y + this.height/2;
-                break;
-        }
-        
-        return new Bullet(bulletX, bulletY, shootDir, this.isPlayer);
+    const shootDir = this.aimDirection;
+    let bulletX, bulletY;
+    
+    // ИСПРАВЛЕНИЕ: Правильное позиционирование пули
+    switch(shootDir) {
+        case 0: // up
+            bulletX = this.x + this.width/2 - 3;
+            bulletY = this.y - 6;
+            break;
+        case 1: // right
+            bulletX = this.x + this.width;
+            bulletY = this.y + this.height/2 - 3;
+            break;
+        case 2: // down
+            bulletX = this.x + this.width/2 - 3;
+            bulletY = this.y + this.height;
+            break;
+        case 3: // left
+            bulletX = this.x - 6;
+            bulletY = this.y + this.height/2 - 3;
+            break;
     }
+    
+    console.log(`Creating bullet at ${bulletX}, ${bulletY} direction ${shootDir}`);
+    return new Bullet(bulletX, bulletY, shootDir, this.isPlayer);
+}
     
     takeDamage() {
         if (this.invulnerable > 0) return false;
@@ -1942,17 +1953,22 @@ window.addEventListener('keydown', (e) => {
     
     keys[key] = true;
     
-    if (!GameState.gameOver && !GameState.gamePaused) {
-        if (['arrowup', 'arrowright', 'arrowdown', 'arrowleft'].includes(e.key)) {
-            const bullet = GameState.player?.shoot();
-            if (bullet) GameState.bullets.push(bullet);
+    // ИСПРАВЛЕНИЕ: Правильная обработка стрельбы стрелками
+    if (!GameState.gameOver && !GameState.gamePaused && GameState.player) {
+        if (['arrowup', 'arrowright', 'arrowdown', 'arrowleft'].includes(e.key.toLowerCase())) {
+            const bullet = GameState.player.shoot();
+            if (bullet) {
+                GameState.bullets.push(bullet);
+                console.log('Bullet created!'); // Для отладки
+            }
         }
     }
 });
 
 window.addEventListener('keyup', (e) => {
     if (GameState.isMobile) return;
-    keys[e.key.toLowerCase()] = false;
+    const key = e.key.toLowerCase();
+    keys[key] = false;
 });
 
 // Инициализация игры
