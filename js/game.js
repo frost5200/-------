@@ -91,6 +91,41 @@ const COLORS = {
     DARK_BROWN: '#643200'
 };
 
+// ==================== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ И ИНИЦИАЛИЗАЦИЯ ====================
+
+const GameState = {
+    player: null,
+    bullets: [],
+    enemies: [],
+    walls: [],
+    explosions: [],
+    bonuses: [],
+    bonusNotifications: [],
+    gameOver: false,
+    gamePaused: false,
+    score: 0,
+    playerLives: 3,
+    gameLevel: 1,
+    enemiesToKill: 5,
+    lastBonusTime: 0,
+    lastMoveSound: 0,
+    lastUpdateTime: 0,
+    frameCount: 0,
+    lastFpsUpdate: 0,
+    currentFPS: 0,
+    isMobile: false,
+    activeDirections: new Set(),
+    isShooting: false,
+    autoShootInterval: null,
+    currentDifficulty: 'normal',
+    graphicsSettings: {
+        explosions: true,
+        particleDensity: 'medium',
+        screenShake: true,
+        frameRateTarget: 60
+    }
+};
+
 // ==================== СИСТЕМА УТИЛИТ ====================
 
 class Utils {
@@ -198,7 +233,11 @@ class GraphicsManager {
             frameRateTarget: 60,
             lowSpecMode: false
         };
-        this.loadSettings();
+        
+        // Откладываем загрузку настроек до полной инициализации
+        setTimeout(() => {
+            this.loadSettings();
+        }, 100);
     }
     
     loadSettings() {
@@ -223,13 +262,16 @@ class GraphicsManager {
     }
     
     applySettings() {
-        GameState.graphicsSettings = { ...this.settings };
-        
-        const targetFPS = this.settings.frameRateTarget === 0 ? 144 : this.settings.frameRateTarget;
-        GameConfig.PERFORMANCE.UPDATE_INTERVAL = 1000 / targetFPS;
-        
-        if (!this.settings.explosions) {
-            GameState.explosions = [];
+        // Проверяем, что GameState уже инициализирован
+        if (typeof GameState !== 'undefined') {
+            GameState.graphicsSettings = { ...this.settings };
+            
+            const targetFPS = this.settings.frameRateTarget === 0 ? 144 : this.settings.frameRateTarget;
+            GameConfig.PERFORMANCE.UPDATE_INTERVAL = 1000 / targetFPS;
+            
+            if (!this.settings.explosions) {
+                GameState.explosions = [];
+            }
         }
     }
     
@@ -1089,6 +1131,7 @@ class GameManager {
             this.showScreen('game');
             this.startGame();
         });
+        
         document.getElementById('controlsButton').addEventListener('click', () => this.showScreen('controls'));
         document.getElementById('aboutButton').addEventListener('click', () => this.showScreen('about'));
         document.getElementById('difficultyButton').addEventListener('click', () => {
@@ -1864,39 +1907,6 @@ const collisionSystem = new CollisionSystem();
 const graphicsManager = new GraphicsManager();
 const keys = {};
 
-const GameState = {
-    player: null,
-    bullets: [],
-    enemies: [],
-    walls: [],
-    explosions: [],
-    bonuses: [],
-    bonusNotifications: [],
-    gameOver: false,
-    gamePaused: false,
-    score: 0,
-    playerLives: 3,
-    gameLevel: 1,
-    enemiesToKill: 5,
-    lastBonusTime: 0,
-    lastMoveSound: 0,
-    lastUpdateTime: 0,
-    frameCount: 0,
-    lastFpsUpdate: 0,
-    currentFPS: 0,
-    isMobile: false,
-    activeDirections: new Set(),
-    isShooting: false,
-    autoShootInterval: null,
-    currentDifficulty: 'normal',
-    graphicsSettings: {
-        explosions: true,
-        particleDensity: 'medium',
-        screenShake: true,
-        frameRateTarget: 60
-    }
-};
-
 function showBonusNotification(text) {
     const notification = {
         text: text,
@@ -1946,7 +1956,11 @@ window.addEventListener('keyup', (e) => {
 });
 
 // Инициализация игры
-window.addEventListener('load', () => GameManager.init());
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(() => {
+        GameManager.init();
+    }, 100);
+});
 
 // Предотвращение контекстного меню
 canvas.addEventListener('contextmenu', (e) => e.preventDefault());
