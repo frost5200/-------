@@ -1,3 +1,5 @@
+// ЗАМЕНИТЕ весь файл sounds.js на этот исправленный код:
+
 /**
  * Оптимизированная система звуков для игры Танчики
  * Улучшенная версия с расширенной функциональностью
@@ -357,7 +359,7 @@ class SoundSystem {
      * Установка громкости
      */
     setVolume(volume) {
-        this.globalVolume = Utils.clamp(volume, 0, 1);
+        this.globalVolume = Math.max(0, Math.min(1, volume));
     }
 
     /**
@@ -500,8 +502,3 @@ window.addEventListener('load', () => {
         soundSystem.preload();
     }, 1000);
 });
-
-// Экспорт для использования в других модулях
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { soundSystem, SoundUtils };
-}
