@@ -953,3 +953,451 @@ canvas {
         -webkit-touch-callout: none;
     }
 }
+/* Добавьте эти CSS-переменные для безопасных зон */
+:root {
+    --sat: env(safe-area-inset-top);
+    --sar: env(safe-area-inset-right);
+    --sab: env(safe-area-inset-bottom);
+    --sal: env(safe-area-inset-left);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+    color: #0f0;
+    font-family: 'Courier New', monospace;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    overflow: hidden;
+    touch-action: manipulation;
+    /* Учитываем безопасные зоны */
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+.screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    /* Учитываем безопасные зоны */
+    padding-top: calc(20px + env(safe-area-inset-top, 0px));
+    padding-right: calc(20px + env(safe-area-inset-right, 0px));
+    padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+    padding-left: calc(20px + env(safe-area-inset-left, 0px));
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Обновленные стили главного меню */
+.menu-container {
+    text-align: center;
+    background: rgba(0, 0, 0, 0.9);
+    padding: clamp(20px, 5vw, 40px);
+    border: 4px solid #0f0;
+    border-radius: 15px;
+    box-shadow: 0 0 40px #0f0;
+    max-width: min(600px, 90vw);
+    width: 100%;
+    backdrop-filter: blur(10px);
+    margin: 0 auto;
+}
+
+.menu-container h1 {
+    font-size: clamp(2.5rem, 8vw, 4rem);
+    margin-bottom: clamp(10px, 2vw, 20px);
+    text-shadow: 0 0 20px #0f0;
+    color: #0f0;
+    letter-spacing: 4px;
+    background: linear-gradient(45deg, #0f0, #0a0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.menu-subtitle {
+    font-size: clamp(1rem, 4vw, 1.5rem);
+    margin-bottom: clamp(20px, 5vw, 40px);
+    color: #0f0;
+    text-shadow: 0 0 10px #0f0;
+    opacity: 0.8;
+}
+
+.menu-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(10px, 3vw, 15px);
+    margin-bottom: clamp(20px, 5vw, 40px);
+}
+
+.menu-button {
+    background: linear-gradient(145deg, #0a0, #0f0);
+    color: #000;
+    border: none;
+    padding: clamp(12px, 4vw, 18px) clamp(15px, 5vw, 30px);
+    font-size: clamp(1rem, 4vw, 1.3rem);
+    font-family: 'Courier New', monospace;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border-radius: 10px;
+    font-weight: bold;
+    box-shadow: 0 5px 15px rgba(0, 255, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+}
+
+/* Обновленные стили игрового экрана */
+.game-header {
+    width: 100%;
+    max-width: 800px;
+    margin-bottom: 15px;
+    padding: 0 10px;
+}
+
+.game-container {
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+    height: auto;
+    min-height: 400px;
+    max-height: 70vh;
+    border: 4px solid #0f0;
+    box-shadow: 0 0 20px #0f0;
+    overflow: hidden;
+    background-color: #000;
+    border-radius: 15px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+}
+
+.info-panel {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 12px 15px;
+    background-color: rgba(0, 0, 0, 0.9);
+    border: 2px solid #0f0;
+    border-radius: 10px;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.info-item {
+    font-size: clamp(0.7rem, 3vw, 1.1rem);
+    color: #0f0;
+    padding: 6px 10px;
+    background: rgba(0, 255, 0, 0.1);
+    border-radius: 6px;
+    border: 1px solid #0f0;
+    white-space: nowrap;
+    flex: 1;
+    min-width: fit-content;
+    text-align: center;
+}
+
+/* Обновленное мобильное управление с учетом полей */
+.mobile-controls {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 100;
+    display: none;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding: 15px;
+    box-sizing: border-box;
+}
+
+/* Адаптивные отступы для мобильного управления */
+@media (max-width: 768px) {
+    .mobile-controls {
+        display: flex !important;
+        padding: 12px;
+    }
+    
+    .game-container {
+        max-height: 60vh;
+        min-height: 350px;
+        margin: 10px 0;
+    }
+    
+    .info-panel {
+        padding: 10px 12px;
+    }
+    
+    .info-item {
+        padding: 5px 8px;
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .mobile-controls {
+        padding: 10px;
+    }
+    
+    .game-container {
+        max-height: 55vh;
+        min-height: 300px;
+        margin: 8px 0;
+    }
+    
+    .info-panel {
+        padding: 8px 10px;
+        gap: 6px;
+    }
+    
+    .info-item {
+        padding: 4px 6px;
+        font-size: 0.75rem;
+    }
+    
+    .screen {
+        padding: 15px;
+        padding-top: calc(15px + env(safe-area-inset-top, 0px));
+        padding-right: calc(15px + env(safe-area-inset-right, 0px));
+        padding-bottom: calc(15px + env(safe-area-inset-bottom, 0px));
+        padding-left: calc(15px + env(safe-area-inset-left, 0px));
+    }
+}
+
+@media (max-width: 360px) {
+    .mobile-controls {
+        padding: 8px;
+    }
+    
+    .game-container {
+        max-height: 50vh;
+        min-height: 250px;
+        margin: 5px 0;
+    }
+    
+    .info-panel {
+        padding: 6px 8px;
+    }
+    
+    .info-item {
+        padding: 3px 5px;
+        font-size: 0.7rem;
+    }
+}
+
+/* Особые стили для ландшафтной ориентации на мобильных */
+@media (max-width: 768px) and (orientation: landscape) {
+    .game-container {
+        max-height: 75vh;
+        min-height: 200px;
+    }
+    
+    .info-panel {
+        padding: 8px 10px;
+    }
+    
+    .info-item {
+        font-size: 0.75rem;
+        padding: 4px 6px;
+    }
+    
+    .mobile-controls {
+        padding: 10px;
+    }
+}
+
+/* Стили для очень высоких экранов */
+@media (min-height: 1000px) and (max-width: 768px) {
+    .game-container {
+        max-height: 50vh;
+    }
+}
+
+/* Улучшенные стили для элементов управления */
+.d-pad {
+    display: grid;
+    grid-template-areas: 
+        ". up ."
+        "left center right"
+        ". down .";
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    gap: 4px;
+    width: clamp(80px, 22vw, 110px);
+    height: clamp(80px, 22vw, 110px);
+}
+
+.movement-btn {
+    width: clamp(26px, 7vw, 35px);
+    height: clamp(26px, 7vw, 35px);
+    background: rgba(0, 255, 0, 0.7);
+    border: 2px solid #0f0;
+    border-radius: 8px;
+    color: #000;
+    font-size: clamp(0.8rem, 3.5vw, 1.1rem);
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.1s ease;
+    touch-action: manipulation;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    pointer-events: auto;
+    box-shadow: 0 2px 8px rgba(0, 255, 0, 0.3);
+}
+
+.shoot-btn {
+    width: clamp(55px, 18vw, 70px);
+    height: clamp(55px, 18vw, 70px);
+    background: linear-gradient(145deg, #ff4444, #ff0000);
+    border: 3px solid #fff;
+    border-radius: 50%;
+    color: white;
+    font-weight: bold;
+    font-size: clamp(0.65rem, 2.5vw, 0.8rem);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+    box-shadow: 0 4px 15px rgba(255, 0, 0, 0.5);
+    cursor: pointer;
+    transition: all 0.1s ease;
+    touch-action: manipulation;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: auto;
+}
+
+.utility-btn {
+    width: clamp(35px, 10vw, 45px);
+    height: clamp(35px, 10vw, 45px);
+    background: rgba(0, 0, 0, 0.7);
+    border: 2px solid #0f0;
+    border-radius: 8px;
+    color: #0f0;
+    font-size: clamp(0.8rem, 3.5vw, 1.1rem);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.1s ease;
+    touch-action: manipulation;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    pointer-events: auto;
+}
+
+/* Адаптация полноэкранного режима с учетом полей */
+#gameScreen:fullscreen .game-container {
+    width: calc(100vw - 40px);
+    height: calc(100vh - 40px);
+    max-width: none;
+    max-height: none;
+    border: none;
+    border-radius: 0;
+    margin: 20px;
+}
+
+#gameScreen:-webkit-full-screen .game-container {
+    width: calc(100vw - 40px);
+    height: calc(100vh - 40px);
+    max-width: none;
+    max-height: none;
+    border: none;
+    border-radius: 0;
+    margin: 20px;
+}
+
+#gameScreen:-moz-full-screen .game-container {
+    width: calc(100vw - 40px);
+    height: calc(100vh - 40px);
+    max-width: none;
+    max-height: none;
+    border: none;
+    border-radius: 0;
+    margin: 20px;
+}
+
+#gameScreen:-ms-fullscreen .game-container {
+    width: calc(100vw - 40px);
+    height: calc(100vh - 40px);
+    max-width: none;
+    max-height: none;
+    border: none;
+    border-radius: 0;
+    margin: 20px;
+}
+
+/* Адаптация для очень маленьких экранов в полноэкранном режиме */
+@media (max-width: 480px) and (orientation: landscape) {
+    #gameScreen:fullscreen .game-container {
+        width: calc(100vw - 20px);
+        height: calc(100vh - 20px);
+        margin: 10px;
+    }
+    
+    #gameScreen:fullscreen .info-panel {
+        padding: 6px 8px;
+    }
+    
+    #gameScreen:fullscreen .info-item {
+        font-size: 0.7rem;
+        padding: 3px 5px;
+    }
+}
+
+/* Поддержка устройств с вырезом (notch) */
+@supports (padding: max(0px)) {
+    .screen {
+        padding-top: max(20px, env(safe-area-inset-top));
+        padding-right: max(20px, env(safe-area-inset-right));
+        padding-bottom: max(20px, env(safe-area-inset-bottom));
+        padding-left: max(20px, env(safe-area-inset-left));
+    }
+}
+
+/* Улучшенная анимация для плавного изменения размеров */
+.game-container, .info-panel, .mobile-controls {
+    transition: all 0.3s ease;
+}
+
+/* Предотвращение слишком маленького игрового поля */
+@media (max-height: 500px) and (orientation: landscape) {
+    .game-container {
+        min-height: 200px;
+        max-height: 80vh;
+    }
+}
