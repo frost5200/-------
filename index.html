@@ -1,12 +1,23 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Танчики - Ретро Игра</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+    <!-- Экран ориентации -->
+    <div id="orientationScreen" class="screen hidden">
+        <div class="orientation-message">
+            <div class="orientation-icon">📱</div>
+            <h2>ПОВЕРНИТЕ УСТРОЙСТВО</h2>
+            <p>Для игры требуется альбомная ориентация</p>
+            <div class="orientation-arrow">↻</div>
+        </div>
+    </div>
+
     <!-- Главное меню -->
     <div id="mainMenu" class="screen">
         <div class="menu-container">
@@ -21,7 +32,8 @@
             </div>
             
             <div class="menu-footer">
-                <div class="version">v2.1</div>
+                <div class="version">v2.1 МОБИЛЬНАЯ</div>
+                <div class="orientation-hint">Играйте в альбомной ориентации</div>
             </div>
         </div>
     </div>
@@ -93,6 +105,22 @@
                     <span class="control-description">Вкл/Выкл звук</span>
                 </div>
             </div>
+
+            <div class="mobile-only">
+                <h3>МОБИЛЬНОЕ УПРАВЛЕНИЕ</h3>
+                <div class="control-item">
+                    <span class="control-keys">← ↑ → ↓</span>
+                    <span class="control-description">Движение танка</span>
+                </div>
+                <div class="control-item">
+                    <span class="control-keys">КНОПКА ОГНЯ</span>
+                    <span class="control-description">Стрельба</span>
+                </div>
+                <div class="control-item">
+                    <span class="control-keys">ПАУЗА</span>
+                    <span class="control-description">Пауза игры</span>
+                </div>
+            </div>
             
             <button id="backFromControls" class="menu-button secondary">НАЗАД</button>
         </div>
@@ -113,6 +141,7 @@
                     <div class="feature">🤖 Умный ИИ врагов</div>
                     <div class="feature">🔊 Звуковые эффекты</div>
                     <div class="feature">📱 Адаптивный дизайн</div>
+                    <div class="feature">🎯 Оптимизировано для мобильных</div>
                 </div>
             </div>
             
@@ -136,6 +165,26 @@
         <div class="game-container">
             <canvas id="gameCanvas" width="800" height="600"></canvas>
             
+            <!-- Мобильное управление -->
+            <div class="mobile-controls">
+                <div class="movement-buttons">
+                    <div class="d-pad">
+                        <button class="movement-btn up-btn" data-direction="up">↑</button>
+                        <button class="movement-btn left-btn" data-direction="left">←</button>
+                        <button class="movement-btn down-btn" data-direction="down">↓</button>
+                        <button class="movement-btn right-btn" data-direction="right">→</button>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="shoot-btn" id="shootButton">ОГОНЬ</button>
+                    <div class="utility-buttons">
+                        <button class="utility-btn" id="pauseButton">⏸</button>
+                        <button class="utility-btn" id="menuButtonMobile">🏠</button>
+                    </div>
+                </div>
+            </div>
+            
             <div id="gameOverScreen" class="game-over hidden">
                 <div class="game-over-content">
                     <h1>ИГРА ОКОНЧЕНА</h1>
@@ -150,7 +199,7 @@
             <div id="pauseScreen" class="pause-screen hidden">
                 <div class="pause-content">
                     <h1>ПАУЗА</h1>
-                    <p>Нажмите P для продолжения</p>
+                    <p>Нажмите кнопку для продолжения</p>
                     <div class="pause-buttons">
                         <button id="continueButton" class="game-button primary">▶ ПРОДОЛЖИТЬ</button>
                         <button id="menuFromPauseButton" class="game-button secondary">🏠 ГЛАВНОЕ МЕНЮ</button>
@@ -170,7 +219,7 @@
             </div>
         </div>
         
-        <div class="controls">
+        <div class="controls desktop-only">
             <p>УПРАВЛЕНИЕ: WASD - движение, СТРЕЛКИ - наведение и стрельба, P - пауза, M - звук</p>
         </div>
     </div>
