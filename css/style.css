@@ -267,6 +267,7 @@ body {
     margin-top: 30px;
     padding-top: 20px;
     border-top: 2px solid #0f0;
+    display: none;
 }
 
 .mobile-only h3 {
@@ -528,7 +529,7 @@ canvas {
     50% { transform: rotate(90deg); }
 }
 
-/* Мобильное управление */
+/* Мобильное управление - скрыто по умолчанию на ПК */
 .mobile-controls {
     position: absolute;
     top: 0;
@@ -537,12 +538,28 @@ canvas {
     height: 100%;
     pointer-events: none;
     z-index: 100;
-    display: flex;
+    display: none;
     justify-content: space-between;
     align-items: flex-end;
     padding: 15px;
 }
 
+/* Показываем мобильное управление только на мобильных устройствах */
+@media (max-width: 768px) {
+    .mobile-controls {
+        display: flex !important;
+    }
+    
+    .mobile-only {
+        display: block;
+    }
+    
+    .desktop-only {
+        display: none;
+    }
+}
+
+/* Улучшенные стили для кнопок мобильного управления */
 .movement-buttons {
     pointer-events: auto;
 }
@@ -575,9 +592,14 @@ canvas {
     cursor: pointer;
     transition: all 0.1s ease;
     touch-action: manipulation;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
     user-select: none;
-    box-shadow: 0 2px 8px rgba(0, 255, 0, 0.3);
     pointer-events: auto;
+    box-shadow: 0 2px 8px rgba(0, 255, 0, 0.3);
 }
 
 .movement-btn:active {
@@ -624,6 +646,11 @@ canvas {
     cursor: pointer;
     transition: all 0.1s ease;
     touch-action: manipulation;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
     user-select: none;
     display: flex;
     align-items: center;
@@ -656,6 +683,12 @@ canvas {
     cursor: pointer;
     transition: all 0.1s ease;
     touch-action: manipulation;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
     pointer-events: auto;
 }
 
@@ -698,14 +731,6 @@ canvas {
     
     .difficulty-button {
         padding: 15px;
-    }
-    
-    .desktop-only {
-        display: none;
-    }
-    
-    .mobile-only {
-        display: block;
     }
 }
 
@@ -785,6 +810,13 @@ canvas {
     }
 }
 
+/* Убедимся, что на ПК мобильное управление скрыто */
+@media (min-width: 769px) {
+    .mobile-controls {
+        display: none !important;
+    }
+}
+
 /* Принудительная горизонтальная ориентация для мобильных */
 @media (max-width: 768px) and (orientation: portrait) {
     #orientationScreen {
@@ -798,152 +830,6 @@ canvas {
 
 @media (max-width: 768px) and (orientation: landscape) {
     #orientationScreen {
-        display: none !important;
-    }
-}
-/* Стили для мобильного управления - скрыты по умолчанию */
-.mobile-controls {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 100;
-    display: none; /* Скрыто по умолчанию */
-    justify-content: space-between;
-    align-items: flex-end;
-    padding: 15px;
-}
-
-/* Показываем мобильное управление только на мобильных устройствах */
-@media (max-width: 768px) {
-    .mobile-controls {
-        display: flex !important;
-    }
-}
-
-/* Улучшенные стили для кнопок мобильного управления */
-.movement-btn, .shoot-btn, .utility-btn {
-    transition: all 0.1s ease;
-    touch-action: manipulation;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-}
-
-.movement-btn:active, .shoot-btn:active, .utility-btn:active {
-    transform: scale(0.95);
-    transition: transform 0.05s ease;
-}
-
-/* Улучшаем отзывчивость кнопок */
-.movement-btn {
-    width: 40px;
-    height: 40px;
-    background: rgba(0, 255, 0, 0.7);
-    border: 2px solid #0f0;
-    border-radius: 8px;
-    color: #000;
-    font-size: 1.2rem;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    pointer-events: auto;
-}
-
-.shoot-btn {
-    width: 80px;
-    height: 80px;
-    background: linear-gradient(145deg, #ff4444, #ff0000);
-    border: 3px solid #fff;
-    border-radius: 50%;
-    color: white;
-    font-weight: bold;
-    font-size: 0.9rem;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
-    box-shadow: 0 4px 15px rgba(255, 0, 0, 0.5);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    pointer-events: auto;
-}
-
-.utility-btn {
-    width: 50px;
-    height: 50px;
-    background: rgba(0, 0, 0, 0.7);
-    border: 2px solid #0f0;
-    border-radius: 8px;
-    color: #0f0;
-    font-size: 1.2rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    pointer-events: auto;
-}
-
-/* Адаптивность для разных размеров мобильных устройств */
-@media (max-width: 768px) {
-    .d-pad {
-        width: 100px;
-        height: 100px;
-    }
-    
-    .movement-btn {
-        width: 35px;
-        height: 35px;
-        font-size: 1rem;
-    }
-    
-    .shoot-btn {
-        width: 70px;
-        height: 70px;
-        font-size: 0.8rem;
-    }
-    
-    .utility-btn {
-        width: 45px;
-        height: 45px;
-        font-size: 1.1rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .d-pad {
-        width: 90px;
-        height: 90px;
-    }
-    
-    .movement-btn {
-        width: 30px;
-        height: 30px;
-        font-size: 0.9rem;
-    }
-    
-    .shoot-btn {
-        width: 65px;
-        height: 65px;
-        font-size: 0.75rem;
-    }
-    
-    .utility-btn {
-        width: 40px;
-        height: 40px;
-        font-size: 1rem;
-    }
-}
-
-/* Убедимся, что на ПК мобильное управление скрыто */
-@media (min-width: 769px) {
-    .mobile-controls {
         display: none !important;
     }
 }
