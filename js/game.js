@@ -149,6 +149,10 @@ let canvasScale = 1;
 let baseCanvasWidth = 800;
 let baseCanvasHeight = 600;
 
+// Полноэкранный режим
+let isFullscreen = false;
+let fullscreenButton = null;
+
 // Управление экранами
 function showScreen(screen) {
     document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
@@ -157,6 +161,7 @@ function showScreen(screen) {
     // При показе игрового экрана обновляем размер канваса
     if (screen === gameScreen) {
         resizeCanvas();
+        updateFullscreenButton();
     }
 }
 
@@ -178,6 +183,75 @@ function checkTouchDevice() {
     return (('ontouchstart' in window) ||
         (navigator.maxTouchPoints > 0) ||
         (navigator.msMaxTouchPoints > 0));
+}
+
+// Полноэкранный режим
+function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+        // Вход в полноэкранный режим
+        const element = document.documentElement;
+        if (element.requestFullscreen) {
+            element.requestFullscreen();
+        } else if (element.mozRequestFullScreen) {
+            element.mozRequestFullScreen();
+        } else if (element.webkitRequestFullscreen) {
+            element.webkitRequestFullscreen();
+        } else if (element.msRequestFullscreen) {
+            element.msRequestFullscreen();
+        }
+    } else {
+        // Выход из полноэкранного режима
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+            document.mozCancelFullScreen();
+        } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+        }
+    }
+}
+
+// Обновление кнопки полноэкранного режима
+function updateFullscreenButton() {
+    if (!fullscreenButton) return;
+    
+    if (isFullscreen) {
+        fullscreenButton.innerHTML = '⛶';
+        fullscreenButton.title = 'Выйти из полноэкранного режима';
+    } else {
+        fullscreenButton.innerHTML = '⛶';
+        fullscreenButton.title = 'Полноэкранный режим';
+    }
+}
+
+// Обработчики событий полноэкранного режима
+function setupFullscreenListeners() {
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+    document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+    document.addEventListener('MSFullscreenChange', handleFullscreenChange);
+}
+
+function handleFullscreenChange() {
+    isFullscreen = !!(
+        document.fullscreenElement ||
+        document.webkitFullscreenElement ||
+        document.mozFullScreenElement ||
+        document.msFullscreenElement
+    );
+    
+    updateFullscreenButton();
+    resizeCanvas();
+    
+    // На Android добавляем задержку для корректного определения размеров
+    if (isTouchDevice) {
+        setTimeout(() => {
+            resizeCanvas();
+            checkOrientation();
+        }, 300);
+    }
 }
 
 // Изменение размера канваса
@@ -308,6 +382,9 @@ expertButton.addEventListener('click', () => setDifficulty('expert'));
 
 // Инициализация мобильного управления
 function initMobileControls() {
+    // Получаем кнопку полноэкранного режима
+    fullscreenButton = document.getElementById('fullscreenButton');
+    
     // Кнопки движения
     const movementButtons = document.querySelectorAll('.movement-btn');
     movementButtons.forEach(btn => {
@@ -396,6 +473,19 @@ function initMobileControls() {
         showScreen(mainMenu);
         gamePaused = false;
     });
+
+    // Кнопка полноэкранного режима
+    if (fullscreenButton) {
+        fullscreenButton.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            toggleFullscreen();
+        });
+
+        fullscreenButton.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            toggleFullscreen();
+        });
+    }
 }
 
 // Обновление мобильного управления
@@ -1051,6 +1141,12 @@ window.addEventListener('keydown', (e) => {
         return;
     }
     
+    // Добавляем поддержку клавиши F для полноэкранного режима
+    if (e.key.toLowerCase() === 'f') {
+        toggleFullscreen();
+        return;
+    }
+    
     keys[e.key.toLowerCase()] = true;
     
     if (!gameOver && !gamePaused) {
@@ -1328,6 +1424,9 @@ function init() {
     // Проверяем тип устройства
     isTouchDevice = checkTouchDevice();
     
+    // Настраиваем полноэкранный режим
+    setupFullscreenListeners();
+    
     restartButton.addEventListener('click', restartGame);
     
     // Устанавливаем сложность по умолчанию
@@ -1341,6 +1440,7 @@ function init() {
         checkOrientation();
         resizeCanvas();
         updateMobileControlsVisibility();
+        updateFullscreenButton();
     });
     
     window.addEventListener('resize', () => {
@@ -1356,6 +1456,17 @@ function init() {
             updateMobileControlsVisibility();
         }, 100);
     });
+    
+    // Автоматически пытаемся войти в полноэкранный режим на мобильных устройствах
+    if (isTouchDevice) {
+        // Даем небольшую задержку для лучшего UX
+        setTimeout(() => {
+            // Показываем подсказку о полноэкранном режиме
+            if (!isFullscreen && window.innerWidth <= 768) {
+                console.log('Для лучшего опыта используйте полноэкранный режим');
+            }
+        }, 2000);
+    }
     
     gameLoop();
 }
