@@ -2,7 +2,6 @@
 // Основные переменные игры
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
-let mobileControlsActive = false;
 
 // Элементы интерфейса
 const scoreElement = document.getElementById('score');
@@ -143,14 +142,22 @@ let mobileControls = {
     right: false
 };
 
+// Адаптивность
+let isTouchDevice = false;
+let mobileControlsActive = false;
+let canvasScale = 1;
+let baseCanvasWidth = 800;
+let baseCanvasHeight = 600;
+
 // Управление экранами
 function showScreen(screen) {
     document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
     screen.classList.remove('hidden');
-}
-function isMobileDevice() {
-    return window.innerWidth <= 768 || 
-           /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    
+    // При показе игрового экрана обновляем размер канваса
+    if (screen === gameScreen) {
+        resizeCanvas();
+    }
 }
 
 // Проверка ориентации
@@ -163,6 +170,55 @@ function checkOrientation() {
     } else {
         orientationScreen.classList.add('hidden');
         return true;
+    }
+}
+
+// Проверка на сенсорное устройство
+function checkTouchDevice() {
+    return (('ontouchstart' in window) ||
+        (navigator.maxTouchPoints > 0) ||
+        (navigator.msMaxTouchPoints > 0));
+}
+
+// Изменение размера канваса
+function resizeCanvas() {
+    const gameContainer = document.querySelector('.game-container');
+    const containerWidth = gameContainer.clientWidth;
+    const containerHeight = gameContainer.clientHeight;
+    
+    // Сохраняем пропорции игрового поля
+    const aspectRatio = baseCanvasWidth / baseCanvasHeight;
+    let newWidth = containerWidth;
+    let newHeight = containerWidth / aspectRatio;
+    
+    if (newHeight > containerHeight) {
+        newHeight = containerHeight;
+        newWidth = containerHeight * aspectRatio;
+    }
+    
+    canvas.width = newWidth;
+    canvas.height = newHeight;
+    canvasScale = newWidth / baseCanvasWidth;
+    
+    // Обновляем мобильное управление
+    updateMobileControlsVisibility();
+}
+
+// Обновление видимости мобильного управления
+function updateMobileControlsVisibility() {
+    const mobileControlsElement = document.querySelector('.mobile-controls');
+    mobileControlsActive = isTouchDevice && window.innerWidth <= 768;
+    
+    if (mobileControlsActive) {
+        mobileControlsElement.style.display = 'flex';
+    } else {
+        mobileControlsElement.style.display = 'none';
+        // Сбрасываем мобильное управление при отключении
+        mobileControls.up = false;
+        mobileControls.down = false;
+        mobileControls.left = false;
+        mobileControls.right = false;
+        updateMobileControls();
     }
 }
 
@@ -252,17 +308,6 @@ expertButton.addEventListener('click', () => setDifficulty('expert'));
 
 // Инициализация мобильного управления
 function initMobileControls() {
-    // Показываем мобильное управление только на мобильных устройствах
-    const mobileControlsElement = document.querySelector('.mobile-controls');
-    mobileControlsActive = isMobileDevice();
-    
-    if (mobileControlsActive) {
-        mobileControlsElement.style.display = 'flex';
-    } else {
-        mobileControlsElement.style.display = 'none';
-        return; // Не инициализируем обработчики на ПК
-    }
-
     // Кнопки движения
     const movementButtons = document.querySelectorAll('.movement-btn');
     movementButtons.forEach(btn => {
@@ -353,7 +398,6 @@ function initMobileControls() {
     });
 }
 
-
 // Обновление мобильного управления
 function updateMobileControls() {
     // Сбрасываем все ключи движения при каждом обновлении
@@ -435,7 +479,7 @@ class Tank {
             this.lastY = this.y;
             
             // Для мобильных устройств направление стрельбы совпадает с направлением движения
-            if (window.innerWidth <= 768) {
+            if (mobileControlsActive) {
                 this.aimDirection = this.direction;
             } else {
                 // Для десктопа оставляем управление стрелками
@@ -1153,7 +1197,6 @@ function gameLoop() {
         ctx.fillStyle = BLACK;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         
-        // Остальной код без изменений...
         drawGrid();
         
         player.update(walls);
@@ -1239,7 +1282,7 @@ function gameLoop() {
             }
         }
         
-        // Проверка победы на уровне (ИСПРАВЛЕНО: условие было инвертировано)
+        // Проверка победы на уровне
         if (enemies.length === 0 && levelCompleteScreen.classList.contains('hidden')) {
             completeLevel();
         }
@@ -1279,49 +1322,39 @@ function gameLoop() {
     
     requestAnimationFrame(gameLoop);
 }
-window.addEventListener('resize', () => {
-    const mobileControlsElement = document.querySelector('.mobile-controls');
-    mobileControlsActive = isMobileDevice();
-    
-    if (mobileControlsActive) {
-        mobileControlsElement.style.display = 'flex';
-    } else {
-        mobileControlsElement.style.display = 'none';
-        // Сбрасываем мобильное управление при переходе на ПК
-        mobileControls.up = false;
-        mobileControls.down = false;
-        mobileControls.left = false;
-        mobileControls.right = false;
-        updateMobileControls();
-    }
-});
 
 // Инициализация игры
-// Инициализация игры
 function init() {
+    // Проверяем тип устройства
+    isTouchDevice = checkTouchDevice();
+    
     restartButton.addEventListener('click', restartGame);
     
     // Устанавливаем сложность по умолчанию
     setDifficulty('normal');
     
-    // Инициализируем мобильное управление (оно само определит, нужно ли его показывать)
+    // Инициализируем мобильное управление
     initMobileControls();
     
     // Проверяем ориентацию при загрузке и изменении размера
-    window.addEventListener('load', checkOrientation);
-    window.addEventListener('resize', checkOrientation);
-    window.addEventListener('orientationchange', checkOrientation);
-    
-    // Дополнительная проверка при загрузке для мобильного управления
     window.addEventListener('load', () => {
-        const mobileControlsElement = document.querySelector('.mobile-controls');
-        mobileControlsActive = isMobileDevice();
-        
-        if (mobileControlsActive) {
-            mobileControlsElement.style.display = 'flex';
-        } else {
-            mobileControlsElement.style.display = 'none';
-        }
+        checkOrientation();
+        resizeCanvas();
+        updateMobileControlsVisibility();
+    });
+    
+    window.addEventListener('resize', () => {
+        checkOrientation();
+        resizeCanvas();
+        updateMobileControlsVisibility();
+    });
+    
+    window.addEventListener('orientationchange', () => {
+        setTimeout(() => {
+            checkOrientation();
+            resizeCanvas();
+            updateMobileControlsVisibility();
+        }, 100);
     });
     
     gameLoop();

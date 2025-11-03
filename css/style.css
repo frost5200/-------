@@ -2,6 +2,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -14,6 +15,7 @@ body {
     justify-content: center;
     min-height: 100vh;
     overflow: hidden;
+    touch-action: manipulation;
 }
 
 .screen {
@@ -26,6 +28,7 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    padding: 10px;
 }
 
 .hidden {
@@ -36,17 +39,17 @@ body {
 .menu-container {
     text-align: center;
     background: rgba(0, 0, 0, 0.9);
-    padding: 40px;
+    padding: 20px;
     border: 4px solid #0f0;
     border-radius: 15px;
     box-shadow: 0 0 40px #0f0;
     max-width: 600px;
-    width: 90%;
+    width: 100%;
     backdrop-filter: blur(10px);
 }
 
 .menu-container h1 {
-    font-size: 4rem;
+    font-size: clamp(2.5rem, 8vw, 4rem);
     margin-bottom: 10px;
     text-shadow: 0 0 20px #0f0;
     color: #0f0;
@@ -58,8 +61,8 @@ body {
 }
 
 .menu-subtitle {
-    font-size: 1.5rem;
-    margin-bottom: 40px;
+    font-size: clamp(1rem, 4vw, 1.5rem);
+    margin-bottom: 30px;
     color: #0f0;
     text-shadow: 0 0 10px #0f0;
     opacity: 0.8;
@@ -68,16 +71,16 @@ body {
 .menu-buttons {
     display: flex;
     flex-direction: column;
-    gap: 15px;
-    margin-bottom: 40px;
+    gap: 12px;
+    margin-bottom: 30px;
 }
 
 .menu-button {
     background: linear-gradient(145deg, #0a0, #0f0);
     color: #000;
     border: none;
-    padding: 18px 30px;
-    font-size: 1.3rem;
+    padding: clamp(12px, 4vw, 18px) clamp(15px, 5vw, 30px);
+    font-size: clamp(1rem, 4vw, 1.3rem);
     font-family: 'Courier New', monospace;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -88,6 +91,7 @@ body {
     box-shadow: 0 5px 15px rgba(0, 255, 0, 0.3);
     position: relative;
     overflow: hidden;
+    width: 100%;
 }
 
 .menu-button::before {
@@ -133,13 +137,13 @@ body {
 
 .version {
     color: #0f0;
-    font-size: 1rem;
+    font-size: 0.9rem;
     opacity: 0.7;
 }
 
 .orientation-hint {
     color: #0f0;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     opacity: 0.6;
     margin-top: 5px;
 }
@@ -148,14 +152,14 @@ body {
 .difficulty-buttons {
     display: flex;
     flex-direction: column;
-    gap: 15px;
-    margin: 30px 0;
+    gap: 12px;
+    margin: 20px 0;
 }
 
 .difficulty-button {
     background: rgba(0, 255, 0, 0.1);
     border: 2px solid #0f0;
-    padding: 20px;
+    padding: 15px;
     border-radius: 10px;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -188,34 +192,35 @@ body {
 }
 
 .difficulty-title {
-    font-size: 1.4rem;
+    font-size: clamp(1.1rem, 4vw, 1.4rem);
     color: #0f0;
     font-weight: bold;
 }
 
 .difficulty-description {
-    font-size: 0.9rem;
+    font-size: clamp(0.8rem, 3vw, 0.9rem);
     color: #0f0;
     opacity: 0.7;
 }
 
 .difficulty-info {
-    margin: 20px 0;
+    margin: 15px 0;
 }
 
 .difficulty-stats {
     background: rgba(0, 255, 0, 0.05);
     border: 1px solid #0f0;
     border-radius: 10px;
-    padding: 20px;
+    padding: 15px;
 }
 
 .stat {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 10px;
-    padding-bottom: 10px;
+    margin-bottom: 8px;
+    padding-bottom: 8px;
     border-bottom: 1px solid rgba(0, 255, 0, 0.2);
+    font-size: clamp(0.8rem, 3vw, 1rem);
 }
 
 .stat:last-child {
@@ -235,7 +240,7 @@ body {
 
 /* Стили экрана управления */
 .controls-list {
-    margin: 30px 0;
+    margin: 20px 0;
     text-align: left;
 }
 
@@ -243,18 +248,20 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 0;
+    padding: 12px 0;
     border-bottom: 1px solid #333;
+    font-size: clamp(0.8rem, 3vw, 1rem);
 }
 
 .control-keys {
     background: rgba(0, 255, 0, 0.1);
-    padding: 8px 15px;
+    padding: 6px 12px;
     border: 1px solid #0f0;
     border-radius: 5px;
     font-weight: bold;
-    min-width: 120px;
+    min-width: 100px;
     text-align: center;
+    font-size: clamp(0.7rem, 3vw, 0.9rem);
 }
 
 .control-description {
@@ -264,38 +271,41 @@ body {
 }
 
 .mobile-only {
-    margin-top: 30px;
-    padding-top: 20px;
+    margin-top: 20px;
+    padding-top: 15px;
     border-top: 2px solid #0f0;
     display: none;
 }
 
 .mobile-only h3 {
     color: #0f0;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
     text-align: center;
+    font-size: clamp(1rem, 4vw, 1.2rem);
 }
 
 /* Стили экрана об игре */
 .about-content {
-    margin: 30px 0;
+    margin: 20px 0;
     text-align: left;
     line-height: 1.6;
 }
 
 .about-content p {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     color: #0f0;
+    font-size: clamp(0.8rem, 3vw, 1rem);
 }
 
 .features-list {
-    margin-top: 30px;
+    margin-top: 20px;
 }
 
 .feature {
-    padding: 10px 0;
+    padding: 8px 0;
     border-bottom: 1px solid #333;
     color: #0f0;
+    font-size: clamp(0.8rem, 3vw, 1rem);
 }
 
 /* Стили игрового экрана */
@@ -307,8 +317,11 @@ body {
 
 .game-container {
     position: relative;
-    width: 800px;
-    height: 600px;
+    width: 100%;
+    max-width: 800px;
+    height: 60vh;
+    min-height: 400px;
+    max-height: 600px;
     border: 4px solid #0f0;
     box-shadow: 0 0 20px #0f0;
     overflow: hidden;
@@ -326,21 +339,22 @@ canvas {
     display: flex;
     justify-content: space-between;
     width: 100%;
-    padding: 15px;
+    padding: 10px;
     background-color: rgba(0, 0, 0, 0.9);
     border: 2px solid #0f0;
     border-radius: 10px;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 8px;
 }
 
 .info-item {
-    font-size: 1.1rem;
+    font-size: clamp(0.7rem, 3vw, 1.1rem);
     color: #0f0;
-    padding: 5px 10px;
+    padding: 4px 8px;
     background: rgba(0, 255, 0, 0.1);
     border-radius: 5px;
     border: 1px solid #0f0;
+    white-space: nowrap;
 }
 
 #difficultyBadge {
@@ -364,12 +378,13 @@ canvas {
     width: 100%;
     max-width: 800px;
     margin-top: 10px;
-    padding: 15px;
+    padding: 10px;
     background-color: rgba(0, 0, 0, 0.9);
     border: 2px solid #0f0;
     text-align: center;
     color: #0f0;
     border-radius: 10px;
+    font-size: clamp(0.7rem, 3vw, 0.9rem);
 }
 
 .desktop-only {
@@ -381,16 +396,16 @@ canvas {
     background: linear-gradient(145deg, #0a0, #0f0);
     color: #000;
     border: none;
-    padding: 15px 25px;
-    font-size: 1.2rem;
+    padding: clamp(10px, 3vw, 15px) clamp(15px, 4vw, 25px);
+    font-size: clamp(0.9rem, 4vw, 1.2rem);
     font-family: 'Courier New', monospace;
     cursor: pointer;
     transition: all 0.3s ease;
     border-radius: 8px;
     font-weight: bold;
     box-shadow: 0 4px 12px rgba(0, 255, 0, 0.3);
-    margin: 5px;
-    min-width: 200px;
+    margin: 4px;
+    min-width: min(200px, 80%);
 }
 
 .game-button:hover {
@@ -429,17 +444,18 @@ canvas {
     justify-content: center;
     z-index: 200;
     backdrop-filter: blur(5px);
+    padding: 20px;
 }
 
 .game-over-content, .pause-content, .level-complete-content {
     background: rgba(0, 0, 0, 0.9);
-    padding: 40px;
+    padding: clamp(20px, 5vw, 40px);
     border: 4px solid #f00;
     border-radius: 15px;
     text-align: center;
     box-shadow: 0 0 40px #f00;
     max-width: 500px;
-    width: 90%;
+    width: 100%;
 }
 
 .pause-content {
@@ -453,9 +469,9 @@ canvas {
 }
 
 .game-over h1, .pause-screen h1, .level-complete h1 {
-    font-size: 3rem;
+    font-size: clamp(1.5rem, 8vw, 3rem);
     color: #f00;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     text-shadow: 0 0 10px #f00;
 }
 
@@ -470,19 +486,20 @@ canvas {
 }
 
 .final-score, .level-stats {
-    font-size: 1.5rem;
-    margin-bottom: 30px;
+    font-size: clamp(1rem, 4vw, 1.5rem);
+    margin-bottom: 20px;
     color: #fff;
 }
 
 .level-stat {
-    margin: 10px 0;
+    margin: 8px 0;
     color: #0f0;
+    font-size: clamp(0.9rem, 3vw, 1.1rem);
 }
 
 .game-over-buttons, .pause-buttons {
     display: flex;
-    gap: 15px;
+    gap: 10px;
     justify-content: center;
     flex-wrap: wrap;
 }
@@ -496,31 +513,32 @@ canvas {
 .orientation-message {
     text-align: center;
     background: rgba(0, 255, 0, 0.1);
-    padding: 30px;
+    padding: 20px;
     border: 3px solid #0f0;
     border-radius: 15px;
     max-width: 90%;
 }
 
 .orientation-icon {
-    font-size: 4rem;
-    margin-bottom: 20px;
+    font-size: clamp(3rem, 15vw, 4rem);
+    margin-bottom: 15px;
 }
 
 .orientation-message h2 {
     color: #0f0;
-    margin-bottom: 15px;
-    font-size: 1.8rem;
+    margin-bottom: 12px;
+    font-size: clamp(1.2rem, 6vw, 1.8rem);
 }
 
 .orientation-message p {
     color: #0f0;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     opacity: 0.8;
+    font-size: clamp(0.9rem, 4vw, 1.1rem);
 }
 
 .orientation-arrow {
-    font-size: 3rem;
+    font-size: clamp(2rem, 10vw, 3rem);
     animation: rotate 2s infinite;
 }
 
@@ -541,7 +559,7 @@ canvas {
     display: none;
     justify-content: space-between;
     align-items: flex-end;
-    padding: 15px;
+    padding: 10px;
 }
 
 /* Показываем мобильное управление только на мобильных устройствах */
@@ -556,6 +574,11 @@ canvas {
     
     .desktop-only {
         display: none;
+    }
+    
+    .game-container {
+        height: 70vh;
+        min-height: 300px;
     }
 }
 
@@ -572,19 +595,19 @@ canvas {
         ". down .";
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr;
-    gap: 5px;
-    width: 120px;
-    height: 120px;
+    gap: 4px;
+    width: clamp(90px, 25vw, 120px);
+    height: clamp(90px, 25vw, 120px);
 }
 
 .movement-btn {
-    width: 40px;
-    height: 40px;
+    width: clamp(28px, 8vw, 40px);
+    height: clamp(28px, 8vw, 40px);
     background: rgba(0, 255, 0, 0.7);
     border: 2px solid #0f0;
     border-radius: 8px;
     color: #000;
-    font-size: 1.2rem;
+    font-size: clamp(0.9rem, 4vw, 1.2rem);
     font-weight: bold;
     display: flex;
     align-items: center;
@@ -629,18 +652,18 @@ canvas {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    gap: 15px;
+    gap: 10px;
 }
 
 .shoot-btn {
-    width: 80px;
-    height: 80px;
+    width: clamp(60px, 20vw, 80px);
+    height: clamp(60px, 20vw, 80px);
     background: linear-gradient(145deg, #ff4444, #ff0000);
     border: 3px solid #fff;
     border-radius: 50%;
     color: white;
     font-weight: bold;
-    font-size: 0.9rem;
+    font-size: clamp(0.7rem, 3vw, 0.9rem);
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
     box-shadow: 0 4px 15px rgba(255, 0, 0, 0.5);
     cursor: pointer;
@@ -666,17 +689,17 @@ canvas {
 
 .utility-buttons {
     display: flex;
-    gap: 10px;
+    gap: 8px;
 }
 
 .utility-btn {
-    width: 50px;
-    height: 50px;
+    width: clamp(40px, 12vw, 50px);
+    height: clamp(40px, 12vw, 50px);
     background: rgba(0, 0, 0, 0.7);
     border: 2px solid #0f0;
     border-radius: 8px;
     color: #0f0;
-    font-size: 1.2rem;
+    font-size: clamp(0.9rem, 4vw, 1.2rem);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -697,116 +720,72 @@ canvas {
     transform: scale(0.95);
 }
 
-/* Адаптивность для мобильных устройств */
-@media (max-width: 850px) {
+/* Адаптивность для очень маленьких экранов */
+@media (max-width: 480px) {
+    .screen {
+        padding: 5px;
+    }
+    
     .menu-container {
-        padding: 20px;
-    }
-    
-    .menu-container h1 {
-        font-size: 2.5rem;
-    }
-    
-    .game-container {
-        width: 95vw;
-        height: 70vh;
-        max-width: 600px;
-        max-height: 450px;
+        padding: 15px;
     }
     
     .info-panel {
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    .game-over-buttons, .pause-buttons {
-        flex-direction: column;
-    }
-    
-    .control-item {
-        flex-direction: column;
-        gap: 10px;
-        text-align: center;
-    }
-    
-    .difficulty-button {
-        padding: 15px;
-    }
-}
-
-@media (max-width: 768px) {
-    .d-pad {
-        width: 100px;
-        height: 100px;
-    }
-    
-    .movement-btn {
-        width: 35px;
-        height: 35px;
-        font-size: 1rem;
-    }
-    
-    .shoot-btn {
-        width: 70px;
-        height: 70px;
-        font-size: 0.8rem;
-    }
-    
-    .utility-btn {
-        width: 45px;
-        height: 45px;
-        font-size: 1.1rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .menu-container h1 {
-        font-size: 2rem;
-    }
-    
-    .menu-button, .game-button {
-        padding: 12px 20px;
-        font-size: 1rem;
-        min-width: 150px;
+        padding: 8px;
+        gap: 5px;
     }
     
     .info-item {
-        font-size: 0.9rem;
+        padding: 3px 6px;
+        font-size: 0.7rem;
     }
     
-    .controls p {
-        font-size: 0.8rem;
+    .game-container {
+        height: 65vh;
+        min-height: 250px;
     }
     
-    .game-over-content, .pause-content, .level-complete-content {
-        padding: 20px;
-    }
-    
-    .game-over h1, .pause-screen h1, .level-complete h1 {
-        font-size: 2rem;
+    .mobile-controls {
+        padding: 8px;
     }
     
     .d-pad {
-        width: 90px;
-        height: 90px;
+        width: 80px;
+        height: 80px;
     }
     
     .movement-btn {
-        width: 30px;
-        height: 30px;
-        font-size: 0.9rem;
+        width: 25px;
+        height: 25px;
+        font-size: 0.8rem;
     }
     
     .shoot-btn {
-        width: 65px;
-        height: 65px;
-        font-size: 0.75rem;
+        width: 55px;
+        height: 55px;
+        font-size: 0.65rem;
     }
     
     .utility-btn {
-        width: 40px;
-        height: 40px;
-        font-size: 1rem;
+        width: 35px;
+        height: 35px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 360px) {
+    .menu-button, .game-button {
+        padding: 10px 12px;
+        font-size: 0.9rem;
+    }
+    
+    .info-item {
+        font-size: 0.65rem;
+    }
+    
+    .game-container {
+        height: 60vh;
+        min-height: 200px;
     }
 }
 
@@ -826,10 +805,36 @@ canvas {
     #gameScreen:not(.hidden) ~ #orientationScreen {
         display: flex !important;
     }
+    
+    .game-container {
+        display: none;
+    }
 }
 
 @media (max-width: 768px) and (orientation: landscape) {
     #orientationScreen {
         display: none !important;
+    }
+    
+    .game-container {
+        display: block;
+        height: 90vh;
+        max-height: calc(100vh - 100px);
+    }
+    
+    .info-panel {
+        padding: 5px;
+    }
+    
+    .info-item {
+        font-size: 0.7rem;
+        padding: 2px 4px;
+    }
+}
+
+/* Поддержка очень высоких экранов */
+@media (min-height: 1000px) and (max-width: 768px) {
+    .game-container {
+        height: 50vh;
     }
 }
